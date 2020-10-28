@@ -64,16 +64,18 @@ module.exports = {
 				name: "string"
 			},
 			async handler(ctx){
-				console.log(ctx.params);
+				//CHECK VALID PARAMS
 				if(!ctx.params){
 					throw new MoleculerClientError("Invalid params!", 404, "INVALID_PARAMS");
 				}
-
-				let nameCategory = await this.adapter.find
-
+				//CHECK 
+				let nameCategory = await this.adapter.findOne(ctx.params);
+				if(nameCategory){
+					throw new MoleculerClientError("NameCategory Existed!", 500, "NAMECATEGORY_EXISTED");
+				}
 				let infoCategory = await this.adapter.insert(ctx.params);
 				if(!infoCategory){
-					throw new MoleculerClientError("Invalid params!", 404, "INVALID_PARAMS");
+					throw new MoleculerClientError("Invalid infoCategory!", 404, "INVALID_INFOCATEGORY");
 				}
 				console.log({infoCategory});
 				return this.transformDocuments(ctx, {}, infoCategory);
